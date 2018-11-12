@@ -1,0 +1,39 @@
+
+import sys
+import boto3
+import datetime
+import os
+
+
+teamName = raw_input("Please enter the name of your project: ")
+bucketFolderName = ""
+
+def createS3Folder():
+	date = datetime.date.today().strftime("%Y") + "." + datetime.date.today().strftime("%B") + "." + datetime.date.today().strftime("%d")
+	date1 = datetime.date.today()
+	print(date1)
+	date = str(date1) + "/" #In order to generate a file, you must put "/" at the end of key
+	bucketFolderName = date + teamName + "/"
+	print(bucketFolderName)  
+	#client = boto3.client('s3')
+	#client.put_object(Bucket='NAME_HERE',Key=bucketFolderName) #This is a test s3 bucket for now - will need to be updated in the future
+	#bucketFolderName = 'NAME_HERE/' + bucketFolderName 
+	#upload_files('/Users/simonaugustus/Desktop/Scout2-master')
+
+def upload_files(path):
+    session = boto3.Session()
+    s3 = session.resource('s3')
+    bucket = s3.Bucket('NAME_HERE')
+    for subdir, dirs, files in os.walk(path):
+        for file in files:
+            full_path = os.path.join(subdir, file)
+            with open(full_path, 'rb') as data:
+                #.put_object(Bucket='NAME_HERE',Key=bucketFolderName[len(bucketFolderName)+1:], Body=data)
+                bucket.put_object(Key=full_path[len(bucketFolderName)+1:], Body=data)
+	
+
+def main():
+	#createS3Folder() 
+	upload_files('/Users/......')
+if __name__ == "__main__":
+	main()
